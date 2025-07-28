@@ -2,39 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PayPal Demo</title>
+  <title>PayPal Demo App</title>
+  <!-- Load PayPal JavaScript SDK with your Sandbox Client ID -->
+  <script src="https://www.paypal.com/sdk/js?client-id=ASv0TjJ-cm-SVlV8p1eS9tXAEDLOaVUcJ_FjgvbUFqprFEwjZ90X6X3cr7vVSs-Xd0g8CctwUOSySkAO&currency=USD"></script>
   <style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 50px;
-  }
-</style>
-
-</head>
-<script src="https://www.paypal.com/sdk/js?client-id=ASv0TjJ-cm-SVlV8p1eS9tXAEDLOaVUcJ_FjgvbUFqprFEwjZ90X6X3cr7vVSs-Xd0g8CctwUOSySkAO&currency=USD"></script>
-<script>
-  paypal.Buttons({
-    createOrder: function(data, actions) {
-      return actions.order.create({
-        purchase_units: [{
-          amount: {
-            value: '10.00'  // demo amount
-          }
-        }]
-      });
-    },
-    onApprove: function(data, actions) {
-      return actions.order.capture().then(function(details) {
-        alert('Transaction completed by ' + details.payer.name.given_name + '!');
-      });
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      margin: 40px;
+      text-align: center;
+      color: #333;
     }
-  }).render('#paypal-button-container');
-</script>
-
+    h1 {
+      color: #0070ba; /* PayPal blue */
+    }
+    #paypal-button-container {
+      margin-top: 30px;
+      display: inline-block;
+    }
+    p {
+      font-size: 16px;
+      margin-top: 20px;
+      color: #555;
+    }
+  </style>
+</head>
 <body>
-  <h1>PayPal Payment Integration</h1>
+  <h1>Purchase Demo Product for $10</h1>
+  <p>Click the PayPal button below to complete your purchase in the sandbox environment.</p>
+
   <div id="paypal-button-container"></div>
+
+  <script>
+    // Initialize and render the PayPal button
+    paypal.Buttons({
+      // This function sets up the transaction details
+      createOrder: function(data, actions) {
+        // Creating an order with a fixed price of $10
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: '10.00' // The amount to be paid
+            }
+          }]
+        });
+      },
+      // This function is called when the payment is approved by the buyer
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+          // Show a success message with the buyer's first name
+          alert('Thank you, ' + details.payer.name.given_name + '! Your transaction is complete.');
+        });
+      },
+      // Handle errors that may occur during the transaction
+      onError: function(err) {
+        console.error('PayPal Checkout Error:', err);
+        alert('Oops! Something went wrong during the payment process. Please try again.');
+      }
+    }).render('#paypal-button-container'); // Render PayPal buttons into the container
+  </script>
 </body>
 </html>
