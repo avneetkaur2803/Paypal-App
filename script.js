@@ -21,7 +21,7 @@ paypal.Buttons({
       }]
     });
   },
-  onApprove: (data, actions) => {
+  onApprove: (data, actions) => {                                              
     return actions.order.capture().then(details => {
       // Show thank you message
       thankYou.style.display = 'block';
